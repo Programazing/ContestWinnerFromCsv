@@ -22,9 +22,9 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void ContestWinner_Reads_FormattedCsvFile()
         {
-            var sut = new ContestWinner(CsvLocation);
+            var sut = new ContestWinner(CsvLocation).GetEntries();
 
-            sut.GetEntries().Count().Should().BeGreaterThan(0);
+            sut.Count().Should().BeGreaterThan(0);
         }
 
         [Test]
@@ -36,5 +36,13 @@ namespace ContestWinnerFromCsvTests
             .WithMessage("File could not be found.");
         }
 
+        [Test]
+        public void GetEntries_ReturnsOnlyEntries_WithinTheValidDateTimeRange()
+        {
+            var sut = new ContestWinner(CsvLocation).GetEntries();
+
+            sut.Where(x => x.IsValid == false).Count().Should().Be(0);
+            
+        }
     }
 }

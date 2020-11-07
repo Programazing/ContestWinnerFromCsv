@@ -1,4 +1,6 @@
 ﻿using CsvHelper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,6 +24,8 @@ namespace ContestWinnerFromCsv
             {
                 throw new FileNotFoundException("File could not be found.", csvLocation);
             }
+
+            Configuration.Initialize();
         }
 
         public List<GoogleFormsCsvModel> GetEntries()
@@ -31,7 +35,7 @@ namespace ContestWinnerFromCsv
             csv.Configuration.RegisterClassMap<GoogleFormsCsvMap>();
             var records = csv.GetRecords<GoogleFormsCsvModel>();
 
-            return records.ToList();
+            return records.Where(x => x.IsValid == true).ToList();
         }
     }
 }

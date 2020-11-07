@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration.Attributes;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,20 +17,29 @@ namespace ContestWinnerFromCsv
         public string TwitterName { get; set; }
 
         private string time;
+        public bool IsValid { get; set; } = false;
 
         public string TimeStampInput
         {
             get { return time; }
             set
             {
-                SetTimeStampFromTimeStampInput(value);
+                SetTimeStampAndValidate(value);
                 time = value;
             }
         }
 
-        private void SetTimeStampFromTimeStampInput(string timeStampInput)
+        private void SetTimeStampAndValidate(string timeStampInput)
         {
             TimeStamp = Convert.ToDateTime(timeStampInput.Remove(timeStampInput.Length - 4));
+
+            var start = Configuration.Settings.StartDateTimeOfContest;
+            var end = Configuration.Settings.EndDateTimeOfContest;
+
+            if(TimeStamp >= start && TimeStamp < end)
+            {
+                IsValid = true;
+            }
         }
     }
 }
