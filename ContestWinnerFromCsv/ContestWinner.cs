@@ -13,6 +13,8 @@ namespace ContestWinnerFromCsv
     public class ContestWinner
     {
         public string CsvLocation { get; set; }
+        private Random RNG;
+
 
         public ContestWinner(string csvLocation)
         {
@@ -26,6 +28,7 @@ namespace ContestWinnerFromCsv
             }
 
             Configuration.Initialize();
+            RNG = new Random();
         }
 
         public List<GoogleFormsCsvModel> GetEntries()
@@ -36,6 +39,26 @@ namespace ContestWinnerFromCsv
             var records = csv.GetRecords<GoogleFormsCsvModel>();
 
             return records.Where(x => x.IsValid == true).ToList();
+        }
+
+        public List<GoogleFormsCsvModel> PickWinners()
+        {
+            var entries = GetEntries();
+            var numberOfWinners = Configuration.Settings.NumberOfWinners;
+            var winners = new List<GoogleFormsCsvModel>();
+
+            for (int i = 0; i < numberOfWinners; i++)
+            {
+                var winner = PickRandom<GoogleFormsCsvModel>(entries);
+                winners.Add(winner);
+            }
+
+            return winners;
+        }
+
+        T PickRandom<T>(List<T> list)
+        {
+            return list[RNG.Next(list.Count)];
         }
     }
 }

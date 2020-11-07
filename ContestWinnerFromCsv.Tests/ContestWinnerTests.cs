@@ -1,5 +1,6 @@
 ﻿using ContestWinnerFromCsv;
 using FluentAssertions;
+using FluentAssertions.Common;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,15 @@ namespace ContestWinnerFromCsvTests
             var sut = new ContestWinner(CsvLocation).GetEntries();
 
             sut.Where(x => x.IsValid == false).Count().Should().Be(0);
+            
+        }
+
+        [Test]
+        public void PickWinners_Returns_CorrectNumber_OfWinners()
+        {
+            var sut = new ContestWinner(CsvLocation).PickWinners();
+
+            sut.Count().Should().Be(2); 
             
         }
     }
