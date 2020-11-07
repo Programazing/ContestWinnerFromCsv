@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>ContestWinnerFromCsvTests</AssemblyName>
+    <AssemblyName>ContestWinnerFromCsv.Tests</AssemblyName>
+    <RootNamespace>ContestWinnerFromCsvTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
