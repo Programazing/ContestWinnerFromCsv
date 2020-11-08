@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration;
 
-namespace ContestWinnerFromCsv
+namespace ContestWinnerFromCsv.FormServices
 {
     public class GoogleFormsCsvMap : ClassMap<GoogleFormsCsvModel>
     {

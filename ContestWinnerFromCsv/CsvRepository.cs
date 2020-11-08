@@ -9,17 +9,31 @@ using System.Text;
 
 namespace ContestWinnerFromCsv
 {
-    public static class CsvRepository
-    {
-        public static List<T> GetCsvData<T, TMap>(string csvLocation) where T : class
+    internal static class CsvRepository<T, TMap> where T : class
             where TMap : ClassMap
-        {
-            using var reader = new StreamReader(csvLocation);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            csv.Configuration.RegisterClassMap<TMap>();
-            var records = csv.GetRecords<T>();
+    {
+        private static List<T> TestData { get; set; }
 
-            return records.ToList();
+        internal static void Initialize(List<T> testData = null)
+        {
+            TestData = testData;
+        }
+
+        internal static List<T> GetCsvData(string csvLocation)
+        {
+            if(TestData == null)
+            {
+                using var reader = new StreamReader(csvLocation);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                csv.Configuration.RegisterClassMap<TMap>();
+                var records = csv.GetRecords<T>();
+
+                return records.ToList(); ;
+            }
+            else
+            {
+                return TestData;
+            }
         }
     }
 }

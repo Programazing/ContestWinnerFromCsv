@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ContestWinnerFromCsv
+namespace ContestWinnerFromCsv.FormServices
 {
-    public class GoogleFormsCsvModel
+    public class GoogleFormsCsvModel : ICsvModel
     {
         public DateTime TimeStamp { get; set; }
         public string Email { get; set; }
@@ -23,14 +23,29 @@ namespace ContestWinnerFromCsv
             }
         }
 
+        private DateTime ContestStart { get; }
+        private DateTime ContestEnd { get; }
+
+        public GoogleFormsCsvModel(DateTime contestStart, DateTime contestEnd)
+        {
+            ContestStart = contestStart;
+            ContestEnd = contestEnd;
+        }
+
+        public GoogleFormsCsvModel()
+        {
+            if (ContestStart == DateTime.MinValue && ContestEnd == DateTime.MinValue)
+            {
+                ContestStart = Configuration.Settings.StartDateTimeOfContest;
+                ContestEnd = Configuration.Settings.EndDateTimeOfContest;
+            }
+        }
+
         private void SetTimeStampAndValidate(string timeStampInput)
         {
             TimeStamp = Convert.ToDateTime(timeStampInput.Remove(timeStampInput.Length - 4));
 
-            var start = Configuration.Settings.StartDateTimeOfContest;
-            var end = Configuration.Settings.EndDateTimeOfContest;
-
-            if(TimeStamp >= start && TimeStamp < end)
+            if(TimeStamp >= ContestStart && TimeStamp < ContestEnd)
             {
                 IsValid = true;
             }

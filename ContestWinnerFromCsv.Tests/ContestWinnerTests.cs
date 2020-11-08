@@ -1,12 +1,13 @@
 ﻿using ContestWinnerFromCsv;
+using ContestWinnerFromCsv.FormServices;
 using FluentAssertions;
-using FluentAssertions.Common;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 
 namespace ContestWinnerFromCsvTests
 {
@@ -15,13 +16,14 @@ namespace ContestWinnerFromCsvTests
     {
         private string CsvLocation { get; }
         private Settings Settings { get; }
-        private ContestWinner ContestWinner { get; set; }
+        private ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap> ContestWinner { get; set; }
 
         public ContestWinnerTests()
         {
             CsvLocation = Path.Combine(Environment.CurrentDirectory, "Contact Information.csv");
-            Settings = TestSettings();
-            ContestWinner = new ContestWinner(CsvLocation, Settings);
+            Settings = ContestWinnerData.TestSettings();
+            ContestWinner = new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+                (CsvLocation, Settings, ContestWinnerData.TestData());
         }
 
         [Test]
@@ -35,7 +37,8 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void ContestWinner_Throws_FileNotFound_WhenGiven_ANonCsvFilePath()
         {
-            Action act = () => new ContestWinner(CsvLocation + "test");
+            Action act = () => new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+                (CsvLocation + "test");
 
             act.Should().Throw<FileNotFoundException>()
             .WithMessage("File could not be found.");
@@ -50,11 +53,11 @@ namespace ContestWinnerFromCsvTests
         }
 
         [Test]
-        public void GetEntries_ReturnsOnlyEntries_ThatAreNotDuplicates()
+        public void GetEntries_ReturnsOnlyEntries_ThatAreValid_AndNotDuplicates()
         {
             var sut = ContestWinner.GetEntries();
 
-            sut.Count().Should().Be(3);
+            sut.Count().Should().Be(7);
         }
 
         [Test]
@@ -65,14 +68,6 @@ namespace ContestWinnerFromCsvTests
             sut.Count().Should().Be(2);
         }
 
-        private Settings TestSettings()
-        {
-            return new Settings
-            {
-                StartDateTimeOfContest = new DateTime(2020, 10, 20),
-                EndDateTimeOfContest = new DateTime(2020, 11, 20, 08,30, 00, DateTimeKind.Local),
-                NumberOfWinners = 2
-            };
-        }
+        
     }
 }

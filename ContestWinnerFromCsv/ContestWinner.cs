@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,12 +7,13 @@ using System.Text;
 
 namespace ContestWinnerFromCsv
 {
-    public class ContestWinner
+    public class ContestWinner<T, TMap> where T: class, ICsvModel
+        where TMap : ClassMap
     {
         private string CsvLocation { get; }
         private Random RNG { get; }
 
-        public ContestWinner(string csvLocation, Settings settings = null)
+        public ContestWinner(string csvLocation, Settings settings = null, List<T> testData = null)
         {
             if (File.Exists(csvLocation))
             {
@@ -23,33 +25,34 @@ namespace ContestWinnerFromCsv
             }
 
             Configuration.Initialize(settings);
+            CsvRepository<T, TMap>.Initialize(testData);
 
             RNG = new Random();
         }
 
-        public List<GoogleFormsCsvModel> GetEntries()
+        public List<T> GetEntries()
         {
-            var records = CsvRepository.GetCsvData<GoogleFormsCsvModel, GoogleFormsCsvMap>(CsvLocation);
+            var records = CsvRepository<T, TMap>.GetCsvData(CsvLocation);
 
             return records.Where(x => x.IsValid == true).Distinct().ToList();
         }
 
-        public List<GoogleFormsCsvModel> PickWinners()
+        public List<T> PickWinners()
         {
             var entries = GetEntries();
             var numberOfWinners = Configuration.Settings.NumberOfWinners;
-            var winners = new List<GoogleFormsCsvModel>();
+            var winners = new List<T>();
 
             for (int i = 0; i < numberOfWinners; i++)
             {
-                var winner = PickRandom<GoogleFormsCsvModel>(entries);
+                var winner = PickRandom(entries);
                 winners.Add(winner);
             }
 
             return winners;
         }
 
-        T PickRandom<T>(List<T> list)
+        T PickRandom(List<T> list)
         {
             return list[RNG.Next(list.Count)];
         }
