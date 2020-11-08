@@ -1,11 +1,5 @@
-﻿using CsvHelper.Configuration.Attributes;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ContestWinnerFromCsv
 {
@@ -40,6 +34,26 @@ namespace ContestWinnerFromCsv
             {
                 IsValid = true;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return TwitterName.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as GoogleFormsCsvModel);
+        }
+
+        public bool Equals([AllowNull] GoogleFormsCsvModel other)
+        {
+            if (Email == other.Email && TwitterName == other.TwitterName)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

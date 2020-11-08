@@ -1,9 +1,5 @@
-﻿using CsvHelper;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,11 +8,10 @@ namespace ContestWinnerFromCsv
 {
     public class ContestWinner
     {
-        public string CsvLocation { get; set; }
-        private Random RNG;
+        private string CsvLocation { get; }
+        private Random RNG { get; }
 
-
-        public ContestWinner(string csvLocation)
+        public ContestWinner(string csvLocation, Settings settings = null)
         {
             if (File.Exists(csvLocation))
             {
@@ -27,18 +22,16 @@ namespace ContestWinnerFromCsv
                 throw new FileNotFoundException("File could not be found.", csvLocation);
             }
 
-            Configuration.Initialize();
+            Configuration.Initialize(settings);
+
             RNG = new Random();
         }
 
         public List<GoogleFormsCsvModel> GetEntries()
         {
-            using var reader = new StreamReader(CsvLocation);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            csv.Configuration.RegisterClassMap<GoogleFormsCsvMap>();
-            var records = csv.GetRecords<GoogleFormsCsvModel>();
+            var records = CsvRepository.GetCsvData<GoogleFormsCsvModel, GoogleFormsCsvMap>(CsvLocation);
 
-            return records.Where(x => x.IsValid == true).ToList();
+            return records.Where(x => x.IsValid == true).Distinct().ToList();
         }
 
         public List<GoogleFormsCsvModel> PickWinners()

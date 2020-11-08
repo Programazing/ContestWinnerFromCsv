@@ -13,17 +13,21 @@ namespace ContestWinnerFromCsvTests
     [TestFixture]
     public class ContestWinnerTests
     {
-        public string CsvLocation { get; set; }
+        private string CsvLocation { get; }
+        private Settings Settings { get; }
+        private ContestWinner ContestWinner { get; set; }
 
         public ContestWinnerTests()
         {
             CsvLocation = Path.Combine(Environment.CurrentDirectory, "Contact Information.csv");
+            Settings = TestSettings();
+            ContestWinner = new ContestWinner(CsvLocation, Settings);
         }
 
         [Test]
         public void ContestWinner_Reads_FormattedCsvFile()
         {
-            var sut = new ContestWinner(CsvLocation).GetEntries();
+            var sut = ContestWinner.GetEntries();
 
             sut.Count().Should().BeGreaterThan(0);
         }
@@ -40,19 +44,35 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void GetEntries_ReturnsOnlyEntries_WithinTheValidDateTimeRange()
         {
-            var sut = new ContestWinner(CsvLocation).GetEntries();
+            var sut = ContestWinner.GetEntries();
 
-            sut.Where(x => x.IsValid == false).Count().Should().Be(0);
-            
+            sut.Where(x => x.IsValid == false).Count().Should().Be(0);        
+        }
+
+        [Test]
+        public void GetEntries_ReturnsOnlyEntries_ThatAreNotDuplicates()
+        {
+            var sut = ContestWinner.GetEntries();
+
+            sut.Count().Should().Be(3);
         }
 
         [Test]
         public void PickWinners_Returns_CorrectNumber_OfWinners()
         {
-            var sut = new ContestWinner(CsvLocation).PickWinners();
+            var sut = ContestWinner.PickWinners();
 
-            sut.Count().Should().Be(2); 
-            
+            sut.Count().Should().Be(2);
+        }
+
+        private Settings TestSettings()
+        {
+            return new Settings
+            {
+                StartDateTimeOfContest = new DateTime(2020, 10, 20),
+                EndDateTimeOfContest = new DateTime(2020, 11, 20, 08,30, 00, DateTimeKind.Local),
+                NumberOfWinners = 2
+            };
         }
     }
 }

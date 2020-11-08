@@ -10,16 +10,23 @@ namespace ContestWinnerFromCsv
     {
         internal static Settings Settings { get; set; }
 
-        internal static void Initialize()
+        internal static void Initialize(Settings settings = null)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
+            if (settings == null)
+            {
+                var builder = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .Build();
 
-            Settings = builder
-                .GetSection("Settings")
-                .Get<Settings>();
+                Settings = builder
+                    .GetSection("Settings")
+                    .Get<Settings>(); 
+            }
+            else
+            {
+                Settings = settings;
+            }
         }
     }
 }
