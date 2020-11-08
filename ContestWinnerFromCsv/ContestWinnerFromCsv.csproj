@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Programazing</Authors>
+    <PackageId>ContestWinnerFromCsv</PackageId>
+    <Description>A library to pick contest winners from the csv output of online Form Services (Google Forms, TypeForms, etc)</Description>
+    <PackageProjectUrl>https://github.com/Programazing/ContestWinnerFromCsv</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Programazing/ContestWinnerFromCsv</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
