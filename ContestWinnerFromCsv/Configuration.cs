@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ContestWinnerFromCsv
 {
-    internal static class Configuration
+    internal class Configuration
     {
-        internal static Settings Settings { get; set; }
+        internal Settings Settings { get; set; }
 
-        internal static void Initialize(Settings settings = null)
+        internal Configuration(Settings settings = null)
         {
             if (settings == null)
             {

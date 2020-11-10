@@ -23,7 +23,7 @@ namespace ContestWinnerFromCsvTests
             CsvLocation = Path.Combine(Environment.CurrentDirectory, "Contact Information.csv");
             Settings = ContestWinnerData.TestSettings();
             ContestWinner = new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
-                (CsvLocation, Settings, ContestWinnerData.TestData());
+                (Settings, ContestWinnerData.TestData());
         }
 
         [Test]
@@ -68,6 +68,15 @@ namespace ContestWinnerFromCsvTests
             sut.Count().Should().Be(2);
         }
 
-        
+        [Test]
+        public void PickWinners_Throws_ArgumentOutOfRangeException_WhenListIsEmpty()
+        {
+            Action act = () => new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+                (Settings, new List<GoogleFormsCsvModel>()).PickWinners();
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+            .WithMessage("CSV is Empty. (Parameter 'records')");
+        }
+
     }
 }

@@ -10,42 +10,73 @@ namespace ContestWinnerFromCsv
     public class ContestWinner<T, TMap> where T: class, ICsvModel
         where TMap : ClassMap
     {
-        private string CsvLocation { get; }
+        private Settings Settings { get; }
+        private CsvRepository<T, TMap> Repository { get; }
         private Random RNG { get; }
 
-        public ContestWinner(string csvLocation, Settings settings = null, List<T> testData = null)
+        public ContestWinner(string csvLocation)
         {
-            if (File.Exists(csvLocation))
-            {
-                CsvLocation = csvLocation;
-            }
-            else
+            if (!File.Exists(csvLocation))
             {
                 throw new FileNotFoundException("File could not be found.", csvLocation);
             }
 
-            Configuration.Initialize(settings);
-            CsvRepository<T, TMap>.Initialize(testData);
+            var configuration = new Configuration();
+
+            Settings = configuration.Settings;
+
+            Repository = new CsvRepository<T, TMap>(csvLocation);
 
             RNG = new Random();
         }
 
-        public List<T> GetEntries()
+        public ContestWinner(Settings settings, IEnumerable<T> testData)
         {
-            var records = CsvRepository<T, TMap>.GetCsvData(CsvLocation);
+            var configuration = new Configuration(settings);
 
-            return records.Where(x => x.IsValid == true).Distinct().ToList();
+            Settings = configuration.Settings;
+
+            Repository = new CsvRepository<T, TMap>(testData);
+
+            RNG = new Random();
         }
 
-        public List<T> PickWinners()
+        public IEnumerable<T> GetEntries()
+        {
+            var records = Repository.GetCsvData();
+
+            if(records.Count() <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(records), "CSV is Empty.");
+            }
+
+            foreach (var item in records)
+            {
+                item.SetTimeStampAndValidate(Settings.StartDateTimeOfContest, Settings.EndDateTimeOfContest);
+            }
+
+            return (IEnumerable<T>)records
+                .Where(x => x.IsValid == true)
+                .Distinct();
+        }
+
+        public IEnumerable<T> PickWinners()
         {
             var entries = GetEntries();
-            var numberOfWinners = Configuration.Settings.NumberOfWinners;
             var winners = new List<T>();
+
+            if (entries.Count() == 1)
+            {
+                winners.Add(entries.FirstOrDefault());
+
+                return winners;
+            }
+            
+            var numberOfWinners = Settings.NumberOfWinners;
 
             for (int i = 0; i < numberOfWinners; i++)
             {
-                var winner = PickRandom(entries);
+                var winner = PickRandom(entries.ToList());
                 winners.Add(winner);
             }
 

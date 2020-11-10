@@ -1,5 +1,6 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
+﻿using ContestWinnerFromCsv.FormServices;
+using CsvHelper;
+//using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,26 +10,33 @@ using System.Text;
 
 namespace ContestWinnerFromCsv
 {
-    internal static class CsvRepository<T, TMap> where T : class
-            where TMap : ClassMap
+    internal class CsvRepository<T, TMap> where T : class, ICsvModel
+            where TMap : CsvHelper.Configuration.ClassMap
     {
-        private static List<T> TestData { get; set; }
+        private string CsvLocation { get; set; }
+        private IEnumerable<T> TestData { get; set; }
 
-        internal static void Initialize(List<T> testData = null)
+        internal CsvRepository(string csvLocation)
+        {
+            CsvLocation = csvLocation;
+        }
+
+        internal CsvRepository(IEnumerable<T> testData = null)
         {
             TestData = testData;
         }
 
-        internal static List<T> GetCsvData(string csvLocation)
+        internal IEnumerable<T> GetCsvData()
         {
-            if(TestData == null)
+
+            if (TestData == null)
             {
-                using var reader = new StreamReader(csvLocation);
+                using var reader = new StreamReader(CsvLocation);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 csv.Configuration.RegisterClassMap<TMap>();
                 var records = csv.GetRecords<T>();
 
-                return records.ToList(); ;
+                return records.ToList();
             }
             else
             {

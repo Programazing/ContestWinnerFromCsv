@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ContestWinnerFromCsv
 {
@@ -9,5 +10,7 @@ namespace ContestWinnerFromCsv
         public string Name { get; set; }
         public string TwitterName { get; set; }
         public bool IsValid { get; set; }
+
+        void SetTimeStampAndValidate(DateTime contestStart, DateTime contestEnd);
     }
 }
