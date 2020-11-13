@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ContestWinnerFromCsvTests
 {
-    static public class ContestWinnerData
+    public static class GoogleTestData
     {
         public static Settings TestSettings()
         {

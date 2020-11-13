@@ -11,7 +11,7 @@ namespace ContestWinnerFromCsv
         where TMap : ClassMap
     {
         private Settings Settings { get; }
-        private CsvRepository<T, TMap> Repository { get; }
+        private ICsvRepository<T, TMap> Repository { get; }
         private Random RNG { get; }
 
         public ContestWinner(string csvLocation)
@@ -30,13 +30,13 @@ namespace ContestWinnerFromCsv
             RNG = new Random();
         }
 
-        public ContestWinner(Settings settings, IEnumerable<T> testData)
+        public ContestWinner(Settings settings, ICsvRepository<T, TMap> testRepository)
         {
             var configuration = new Configuration(settings);
 
             Settings = configuration.Settings;
 
-            Repository = new CsvRepository<T, TMap>(testData);
+            Repository = testRepository;
 
             RNG = new Random();
         }
@@ -76,16 +76,17 @@ namespace ContestWinnerFromCsv
 
             for (int i = 0; i < numberOfWinners; i++)
             {
-                var winner = PickRandom(entries.ToList());
+                var winner = PickRandom(entries);
                 winners.Add(winner);
             }
 
             return winners;
         }
 
-        T PickRandom(List<T> list)
+        T PickRandom(IEnumerable<T> list)
         {
-            return list[RNG.Next(list.Count)];
+            var next = RNG.Next(list.Count());
+            return list.ElementAtOrDefault<T>(next);
         }
     }
 }

@@ -17,13 +17,17 @@ namespace ContestWinnerFromCsvTests
         private string CsvLocation { get; }
         private Settings Settings { get; }
         private ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap> ContestWinner { get; set; }
+        public ICsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap> Repository { get; set; }
 
         public ContestWinnerTests()
         {
+            Repository = new StubCsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap>
+                (GoogleTestData.TestData());
+
             CsvLocation = Path.Combine(Environment.CurrentDirectory, "Contact Information.csv");
-            Settings = ContestWinnerData.TestSettings();
+            Settings = GoogleTestData.TestSettings();
             ContestWinner = new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
-                (Settings, ContestWinnerData.TestData());
+                (Settings, Repository);
         }
 
         [Test]
@@ -71,8 +75,11 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void PickWinners_Throws_ArgumentOutOfRangeException_WhenListIsEmpty()
         {
+            var repository = new StubCsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap>
+                (new List<GoogleFormsCsvModel>());
+
             Action act = () => new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
-                (Settings, new List<GoogleFormsCsvModel>()).PickWinners();
+                (Settings, repository).PickWinners();
 
             act.Should().Throw<ArgumentOutOfRangeException>()
             .WithMessage("CSV is Empty. (Parameter 'records')");
