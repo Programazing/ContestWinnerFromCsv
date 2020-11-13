@@ -1,9 +1,9 @@
 ﻿using CsvHelper;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ContestWinnerFromCsv
@@ -26,7 +26,7 @@ namespace ContestWinnerFromCsv
             csv.Configuration.RegisterClassMap<TMap>();
             var records = csv.GetRecords<T>();
 
-            return records;
+            return records.ToImmutableList();
         }
     }
 }

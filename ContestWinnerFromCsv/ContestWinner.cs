@@ -55,7 +55,7 @@ namespace ContestWinnerFromCsv
                 item.SetTimeStampAndValidate(Settings.StartDateTimeOfContest, Settings.EndDateTimeOfContest);
             }
 
-            return (IEnumerable<T>)records
+            return records
                 .Where(x => x.IsValid == true)
                 .Distinct();
         }
