@@ -18,6 +18,7 @@ Paket CLI
 
 ## Usage
 
+### App Settings
 Add `appsettings.json` in the same directory as your application or add the following section to your pre-existing file.
 
 ```json
@@ -35,7 +36,9 @@ Add `appsettings.json` in the same directory as your application or add the foll
   }
 }
 ```
+**Note:** CsvLocation is for future use and is not currently used for anything.
 
+### Calling Contest Winner
 Within `ContestWinnerFromCsv.FormServices` you'll find a list of currently supported services and their maps.
 
 ```csharp
