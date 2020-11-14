@@ -4,6 +4,18 @@
 
 ## Installation
 
+Package Manager  
+`Install-Package ContestWinnerFromCsv -Version 1.0.0`
+
+.Net CLI  
+`dotnet add package ContestWinnerFromCsv --version 1.0.0`
+
+Package Reference  
+`<PackageReference Include="ContestWinnerFromCsv" Version="1.0.0" />`
+
+Paket CLI  
+`paket add ContestWinnerFromCsv --version 1.0.0`
+
 ## Usage
 
 Within `ContestWinnerFromCsv.FormServices` you'll find a list of currently supported services and their maps.
