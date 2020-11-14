@@ -8,32 +8,31 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-
-namespace ContestWinnerFromCsvTests
+namespace ContestWinnerFromCsvTests.TypeForm
 {
     [TestFixture]
-    public class ContestWinnerTests
+    public class ContestWinnerTestsTypeForm
     {
         private string CsvLocation { get; }
         private Settings Settings { get; }
-        private ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap> ContestWinner { get; set; }
-        public ICsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap> Repository { get; set; }
+        private ContestWinner<TypeFormCsvModel, TypeFormCsvMap> ContestWinner { get; set; }
+        public ICsvRepository<TypeFormCsvModel, TypeFormCsvMap> Repository { get; set; }
 
-        public ContestWinnerTests()
+        public ContestWinnerTestsTypeForm()
         {
-            Repository = new StubCsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap>
-                (GoogleTestData.TestData());
+            Repository = new StubCsvRepository<TypeFormCsvModel, TypeFormCsvMap>
+                (TypeFormTestData.TestData());
 
-            CsvLocation = Path.Combine(Environment.CurrentDirectory, "Contact Information.csv");
+            CsvLocation = Path.Combine(Environment.CurrentDirectory, "responses.csv");
             Settings = GoogleTestData.TestSettings();
-            ContestWinner = new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+            ContestWinner = new ContestWinner<TypeFormCsvModel, TypeFormCsvMap>
                 (Settings, Repository);
         }
 
         [Test]
         public void ContestWinner_Reads_FormattedCsvFile()
         {
-            var sut = ContestWinner.GetEntries();
+            var sut = ContestWinner.GetEntries().ToList();
 
             sut.Count().Should().BeGreaterThan(0);
         }
@@ -41,7 +40,7 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void ContestWinner_Throws_FileNotFound_WhenGiven_ANonCsvFilePath()
         {
-            Action act = () => new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+            Action act = () => new ContestWinner<TypeFormCsvModel, TypeFormCsvMap>
                 (CsvLocation + "test");
 
             act.Should().Throw<FileNotFoundException>()
@@ -53,7 +52,7 @@ namespace ContestWinnerFromCsvTests
         {
             var sut = ContestWinner.GetEntries();
 
-            sut.Where(x => x.IsValid == false).Count().Should().Be(0);        
+            sut.Where(x => x.IsValid == false).Count().Should().Be(0);
         }
 
         [Test]
@@ -75,15 +74,14 @@ namespace ContestWinnerFromCsvTests
         [Test]
         public void PickWinners_Throws_ArgumentOutOfRangeException_WhenListIsEmpty()
         {
-            var repository = new StubCsvRepository<GoogleFormsCsvModel, GoogleFormsCsvMap>
-                (new List<GoogleFormsCsvModel>());
+            var repository = new StubCsvRepository<TypeFormCsvModel, TypeFormCsvMap>
+                (new List<TypeFormCsvModel>());
 
-            Action act = () => new ContestWinner<GoogleFormsCsvModel, GoogleFormsCsvMap>
+            Action act = () => new ContestWinner<TypeFormCsvModel, TypeFormCsvMap>
                 (Settings, repository).PickWinners();
 
             act.Should().Throw<ArgumentOutOfRangeException>()
             .WithMessage("CSV is Empty. (Parameter 'records')");
         }
-
     }
 }

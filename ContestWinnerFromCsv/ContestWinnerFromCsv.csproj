@@ -8,9 +8,11 @@
     <PackageProjectUrl>https://github.com/Programazing/ContestWinnerFromCsv</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Programazing/ContestWinnerFromCsv</RepositoryUrl>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <FileVersion>1.0.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
