@@ -1,6 +1,6 @@
 # Contest Winner From CSV
 
-![Project Status](https://img.shields.io/badge/Status-Active-success.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/Programazing/ContestWinnerFromCsv.svg) [![Build Status](https://travis-ci.org/Programazing/ContestWinnerFromCsv.svg?branch=main)
+![Project Status](https://img.shields.io/badge/Status-Active-success.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/Programazing/ContestWinnerFromCsv.svg) ![Build Status](https://travis-ci.org/Programazing/ContestWinnerFromCsv.svg?branch=main)
 
 ## Installation
 
