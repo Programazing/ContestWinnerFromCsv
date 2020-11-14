@@ -18,6 +18,24 @@ Paket CLI
 
 ## Usage
 
+Add `appsettings.json` in the same directory as your application or add the following section to your pre-existing file.
+
+```json
+{
+  "Settings": {
+    "CsvLocation": "",
+    "NumberOfWinners": 1,
+    "StartDateTimeOfContest": "10/20/2020",
+    "EndDateTimeOfContest": "11/20/2020"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  }
+}
+```
+
 Within `ContestWinnerFromCsv.FormServices` you'll find a list of currently supported services and their maps.
 
 ```csharp
