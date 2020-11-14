@@ -1,0 +1,10 @@
+language: csharp
+mono: none
+dotnet: 3.1
+
+install:
+- dotnet restore
+
+script:
+ - dotnet build
+ - dotnet test ContestWinnerFromCsv.Tests/ContestWinnerFromCsv.Tests.csproj
